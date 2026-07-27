@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulateur de Prêt – PrêtRapide</title>
+    <link rel="stylesheet" href="common.css">
+    <style>
+         :root {
+            --primary: #f47312;
+            --secondary: #004a99;
+            --bg: #f4f6fb;
+            --card-bg: #ffffff;
+            --text: #1a1a2e;
+            --text-muted: #6b7280;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            transition: opacity 0.4s ease, transform 0.4s ease;
+        }
+        
+        body.fade-out {
+            opacity: 0;
+            transform: translateY(-12px);
+        }
+        
+        header {
+            background: linear-gradient(135deg, #f47312 0%, #d45f00 100%);
+            padding: 22px 20px 28px;
+            color: white;
+            text-align: center;
+            position: relative;
+        }
+        
+        .header-logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 4px;
+        }
+        
+        .header-logo .circle {
+            width: 34px;
+            height: 34px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 18px;
+            color: #f47312;
+        }
+        
+        header h1 {
+            font-size: 20px;
+            font-weight: 700;
+            letter-spacing: -0.3px;
+        }
+        
+        header p {
+            font-size: 12px;
+            opacity: 0.82;
+            margin-top: 2px;
+        }
+        
+        .container {
+            padding: 20px 16px 40px;
+            max-width: 500px;
+            margin: auto;
+        }
+        
+        .card {
+            background: var(--card-bg);
+            padding: 22px 18px;
+            border-radius: 18px;
+            box-shadow: 0 2px 16px rgba(0, 0, 0, 0.07);
+            margin-bottom: 16px;
+        }
+        
+        .card-title {
+            font-size: 13px;
+            color: var(--text-muted);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+            margin-bottom: 18px;
+        }
+        
+        .slider-group {
+            margin-bottom: 22px;
+        }
+        
+        .slider-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            margin-bottom: 10px;
+        }
+        
+        .slider-label {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text);
+        }
+        
+        .slider-val {
+            font-size: 17px;
+            font-weight: 700;
+            color: var(--secondary);
+        }
+        
+        input[type="range"] {
+            width: 100%;
+            height: 6px;
+            accent-color: var(--primary);
+            cursor: pointer;
+        }
+        
+        .result-box {
+            background: linear-gradient(135deg, #eef4fb, #dbeafe);
+            padding: 22px;
+            border-radius: 14px;
+            text-align: center;
+        }
+        
+        .result-label {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-bottom: 6px;
+        }
+        
+        .result-val {
+            font-size: 28px;
+            color: var(--secondary);
+            font-weight: 800;
+            letter-spacing: -0.5px;
+        }
+        
+        .result-sub {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+        
+        .apply-btn {
+            width: 100%;
+            background: linear-gradient(135deg, #f47312, #d45f00);
+            color: white;
+            border: none;
+            padding: 17px;
+            border-radius: 14px;
+            font-size: 17px;
+            font-weight: 700;
+            margin-top: 8px;
+            cursor: pointer;
+            letter-spacing: 0.2px;
+            box-shadow: 0 4px 18px rgba(244, 115, 18, 0.35);
+            transition: transform 0.15s, box-shadow 0.15s;
+        }
+        
+        .apply-btn:active {
+            transform: scale(0.97);
+            box-shadow: 0 2px 10px rgba(244, 115, 18, 0.25);
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <div class="header-logo">
+            <div class="circle">B</div>
+            <h1>PrêtRapide</h1>
+        </div>
+        <p>Simulateur de prêt instantané</p>
+    </header>
+
+    <div class="container">
+
+        <div class="card">
+            <div class="card-title">Paramètres du prêt</div>
+
+            <div class="slider-group">
+                <div class="slider-row">
+                    <span class="slider-label">Montant du prêt</span>
+                    <span class="slider-val" id="amtLabel">220 000 XOF</span>
+                </div>
+                <input type="range" id="amount" min="50" max="5000" step="50" value="500">
+            </div>
+
+            <div class="slider-group">
+                <div class="slider-row">
+                    <span class="slider-label">Durée (mois)</span>
+                    <span class="slider-val" id="termLabel">12</span>
+                </div>
+                <input type="range" id="term" min="3" max="36" step="1" value="12">
+            </div>
+
+            <div class="result-box">
+                <div class="result-label">Versement mensuel estimé</div>
+                <div class="result-val" id="monthlyResult">—</div>
+                <div class="result-sub" id="totalResult">—</div>
+            </div>
+        </div>
+
+        <button class="apply-btn" onclick="transitionTo('application.html', 500)">
+            Commencer ma demande →
+        </button>
+    </div>
+
+    <script src="api.js"></script>
+    <script>
+        const KSH_TO_XOF = 4.4;
+
+        const amtSlider = document.getElementById('amount');
+        const trmSlider = document.getElementById('term');
+        const amtLabel = document.getElementById('amtLabel');
+        const trmLabel = document.getElementById('termLabel');
+        const resEl = document.getElementById('monthlyResult');
+        const totalEl = document.getElementById('totalResult');
+
+        function fmt(n) {
+            return Math.round(n).toLocaleString('fr-FR') + ' XOF';
+        }
+
+        function update() {
+            const kshAmount = parseFloat(amtSlider.value);
+            const xofAmount = kshAmount * KSH_TO_XOF * 100;
+            const months = parseInt(trmSlider.value);
+
+            amtLabel.textContent = Math.round(xofAmount).toLocaleString('fr-FR') + ' XOF';
+            trmLabel.textContent = months;
+
+            const total = xofAmount * 1.065;
+            const monthly = total / months;
+
+            resEl.textContent = fmt(monthly);
+            totalEl.textContent = 'Total remboursé : ' + fmt(total);
+        }
+
+        amtSlider.addEventListener('input', update);
+        trmSlider.addEventListener('input', update);
+        update();
+
+        // --- Smooth page transition ---
+        function transitionTo(url, duration) {
+            duration = duration || 400;
+            document.body.classList.add('fade-out');
+            setTimeout(function() {
+                window.location.href = url;
+            }, duration);
+        }
+    </script>
+</body>
+
+</html>

