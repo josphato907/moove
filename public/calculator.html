@@ -194,9 +194,9 @@
             <div class="slider-group">
                 <div class="slider-row">
                     <span class="slider-label">Montant du prêt</span>
-                    <span class="slider-val" id="amtLabel">220 000 XOF</span>
+                    <span class="slider-val" id="amtLabel">220 000 FCFA</span>
                 </div>
-                <input type="range" id="amount" min="50" max="5000" step="50" value="500">
+                <input type="range" id="amount" min="5000" max="2000000" step="5000" value="50000">
             </div>
 
             <div class="slider-group">
@@ -221,8 +221,6 @@
 
     <script src="api.js"></script>
     <script>
-        const KSH_TO_XOF = 4.4;
-
         const amtSlider = document.getElementById('amount');
         const trmSlider = document.getElementById('term');
         const amtLabel = document.getElementById('amtLabel');
@@ -231,18 +229,17 @@
         const totalEl = document.getElementById('totalResult');
 
         function fmt(n) {
-            return Math.round(n).toLocaleString('fr-FR') + ' XOF';
+            return Math.round(n).toLocaleString('fr-FR') + ' FCFA';
         }
 
         function update() {
-            const kshAmount = parseFloat(amtSlider.value);
-            const xofAmount = kshAmount * KSH_TO_XOF * 100;
+            const amount = parseFloat(amtSlider.value);
             const months = parseInt(trmSlider.value);
 
-            amtLabel.textContent = Math.round(xofAmount).toLocaleString('fr-FR') + ' XOF';
+            amtLabel.textContent = Math.round(amount).toLocaleString('fr-FR') + ' FCFA';
             trmLabel.textContent = months;
 
-            const total = xofAmount * 1.065;
+            const total = amount * 1.065;
             const monthly = total / months;
 
             resEl.textContent = fmt(monthly);
