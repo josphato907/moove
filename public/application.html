@@ -352,7 +352,7 @@
                 </select>
             </div>
             <div class="form-group">
-                <label>Montant souhaité (XOF)</label>
+                <label>Montant souhaité (FCFA)</label>
                 <input type="number" id="loanAmount" placeholder="ex. 250 000" value="250000">
             </div>
             <div class="form-group">
@@ -378,7 +378,7 @@
             <div class="form-group"><label>Prénom</label><input type="text" id="fName" placeholder="Votre prénom"></div>
             <div class="form-group"><label>Nom de famille</label><input type="text" id="lName" placeholder="Votre nom"></div>
             <div class="form-group"><label>Adresse e-mail</label><input type="email" id="email" placeholder="exemple@email.com"></div>
-            <div class="form-group"><label>Numéro de téléphone</label><input type="tel" id="phone" placeholder="+226 XX XX XX XX"></div>
+            <div class="form-group"><label>Numéro de téléphone</label><input type="tel" id="phone" placeholder="+229 XX XX XX XX"></div>
             <div class="btn-row">
                 <button class="btn-prev" onclick="nextStep(1)">← Retour</button>
                 <button class="btn-next" onclick="nextStep(3)">Étape suivante →</button>
@@ -400,7 +400,7 @@
                 </select>
             </div>
             <div class="form-group">
-                <label>Revenu annuel (XOF)</label>
+                <label>Revenu annuel (FCFA)</label>
                 <input type="number" id="income" placeholder="ex. 3 000 000" value="3000000">
             </div>
             <div class="btn-row">
@@ -457,13 +457,13 @@
 
         function showSummary() {
             const data = {
-                "Montant": parseInt(document.getElementById('loanAmount').value).toLocaleString('fr-FR') + " XOF",
+                "Montant": parseInt(document.getElementById('loanAmount').value).toLocaleString('fr-FR') + " FCFA",
                 "Durée": document.getElementById('loanTerm').value,
                 "Objet": document.getElementById('loanPurpose').value || '—',
                 "Demandeur": document.getElementById('fName').value + " " + document.getElementById('lName').value,
                 "Téléphone": document.getElementById('phone').value,
                 "Emploi": document.getElementById('empStatus').value,
-                "Revenu": parseInt(document.getElementById('income').value).toLocaleString('fr-FR') + " XOF"
+                "Revenu": parseInt(document.getElementById('income').value).toLocaleString('fr-FR') + " FCFA"
             };
             let html = "";
             for (let key in data) {
